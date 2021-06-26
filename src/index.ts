@@ -1,4 +1,7 @@
+import dotenv from 'dotenv'
 import GameManager from "./GameManager";
+
+dotenv.config()
 
 const { Client, Intents } = require('discord.js');
 
@@ -22,3 +25,5 @@ client.on('message', message => {
   }
 });
 
+const {DISCORD_BOT_TOKEN} = process.env
+client.login(DISCORD_BOT_TOKEN);

@@ -36,7 +36,8 @@ export default class Game extends EventEmitter{
     }
 
     sendResults(){
-        const results = this.record.reduce((acc, record) => {
+        const results = this.record.filter(({winner}) => Boolean(winner))
+        .reduce((acc, record) => {
             return {
                 ...acc,
                 [record.winner]: (acc[record.winner] ?? 0 ) + 1
