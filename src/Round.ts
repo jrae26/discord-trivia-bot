@@ -1,6 +1,6 @@
 import { EventEmitter } from "events"
 
-const ROUND_MILLISECONDS = 7000
+const ROUND_MILLISECONDS = 30000
 
 export default class Round extends EventEmitter {
     trivia
@@ -23,7 +23,7 @@ export default class Round extends EventEmitter {
     // }
 
     tryAnswer(answer){
-        if(answer === this.trivia.answer){
+        if(answer === this.trivia.correct_answer){
             // this.end()
             return true
         }
