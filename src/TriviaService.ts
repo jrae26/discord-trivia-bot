@@ -1,11 +1,6 @@
+import { categories, clues, PrismaClient } from '@prisma/client'
 import axios from 'axios'
-import { clues, PrismaClient } from '@prisma/client'
 
-const db = [
-  { question: 'What do you call a baby cat?', answer: 'kitten' },
-  { question: 'What do you call a baby cow?', answer: 'calf' },
-]
-const https = require('https')
 function getRandomInt(max) {
   return Math.floor(Math.random() * max)
 }
@@ -19,7 +14,9 @@ export interface OpenTDBTrivia {
   incorrect_answers: string[]
 }
 
-export type JServiceTrivia = clues
+export interface JServiceTrivia extends Omit<clues, 'category'> {
+  category: categories
+}
 
 export default class TriviaService {
   static async getOpenTDBQuestion(): Promise<OpenTDBTrivia> {
@@ -38,12 +35,23 @@ export default class TriviaService {
     const prisma = new PrismaClient()
     await prisma.$connect()
     const clue = await prisma.clues.aggregateRaw({
-      pipeline: [{ $sample: { size: 1 } }],
+      pipeline: [
+        {
+          $lookup: {
+            from: 'categories',
+            localField: 'category',
+            foreignField: '_id',
+            as: 'category_docs',
+          },
+        },
+        { $addFields: { category: { $first: '$category_docs' } } },
+        { $project: { category_docs: false } },
+        { $sample: { size: 1 } },
+      ],
     })
-    console.log(clue)
+    console.log(clue[0])
     await prisma.$disconnect()
-    // @ts-ignore
-    return clue[0]
+    return clue[0] as unknown as JServiceTrivia
   }
 
   static async getQuestion(): Promise<JServiceTrivia> {

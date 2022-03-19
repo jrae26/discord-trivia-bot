@@ -9,11 +9,14 @@ export default class Round {
   }
 
   formatMessage() {
+    // @ts-ignore
+    const airDate = new Date(this.trivia.airdate.$date).toLocaleDateString()
     return new MessageEmbed()
       .setColor('#0099ff')
-      .setTitle(this.trivia.category)
+      .setTitle(this.trivia.category.title)
       .setDescription(this.trivia.question)
       .addField('Answer', this.getMaskedAnswer())
+      .setFooter(`qid: ${this.trivia.qId}`)
   }
 
   getMaskedAnswer() {
