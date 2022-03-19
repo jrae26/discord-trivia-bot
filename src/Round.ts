@@ -1,14 +1,6 @@
 import { EventEmitter } from 'events'
 import { MessageEmbed } from 'discord.js'
-
-interface OpenTDBTrivia {
-  category: string
-  type: 'multiple' | 'boolean'
-  difficulty: 'easy' | 'medium' | 'hard'
-  question: string
-  correct_answer: string
-  incorrect_answers: string[]
-}
+import { OpenTDBTrivia } from './TriviaService'
 
 export default class Round extends EventEmitter {
   trivia: OpenTDBTrivia
