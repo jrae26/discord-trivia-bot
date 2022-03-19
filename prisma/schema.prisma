@@ -21,8 +21,7 @@ model clues {
   v         Int      @map("__v")
   airdate   DateTime @db.Date
   answer    String
-  /// Could not determine type: the field only had null or empty values in the sample set.
-  category  Json?
+  category  String   @db.ObjectId
   createdAt DateTime @db.Date
   gameId    Int
   qId       String
