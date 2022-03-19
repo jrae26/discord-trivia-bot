@@ -33,7 +33,7 @@ export default class Round {
 
     return this.trivia.answer
       .split('')
-      .map((c, i) => (maskedIndices.has(i) ? '\\_' : c))
+      .map((c, i) => (maskedIndices.has(i) && c != ' ' ? '\\_' : c))
       .join('')
   }
 
