@@ -2,7 +2,7 @@ import { EventEmitter } from 'events'
 import Round from './Round'
 import TriviaService from './TriviaService'
 
-const ROUND_MILLISECONDS = 25 * 1000
+const ROUND_MILLISECONDS = 15 * 1000
 
 export default class GameRound extends EventEmitter {
   round: Round
@@ -23,7 +23,7 @@ export default class GameRound extends EventEmitter {
     const trivia = await TriviaService.getQuestion()
     this.round = new Round(trivia)
 
-    this.channel.send(trivia.question)
+    this.channel.send(this.round.formatMessage())
     this.timer = setTimeout(this.end.bind(this), ROUND_MILLISECONDS)
   }
 
@@ -52,6 +52,9 @@ export default class GameRound extends EventEmitter {
   end() {
     clearTimeout(this.timer)
     this.channel.client.off('message', this.handleMessage)
+    if(!this.winner){
+      this.channel.send(`The correct answer was: ${this.round.getAnswer()}`)
+    }
     this.emit('end')
   }
 }
