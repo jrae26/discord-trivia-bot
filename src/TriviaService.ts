@@ -23,7 +23,6 @@ export default class TriviaService {
     const response = await axios.get(
       'https://opentdb.com/api.php?amount=10&category=9&difficulty=medium'
     )
-    console.log(response.data.results)
     const question = {
       ...response.data.results[getRandomInt(10)],
     }
@@ -49,7 +48,6 @@ export default class TriviaService {
         { $sample: { size: 1 } },
       ],
     })
-    console.log(clue[0])
     await prisma.$disconnect()
     return clue[0] as unknown as JServiceTrivia
   }
