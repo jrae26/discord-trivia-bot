@@ -1,12 +1,10 @@
-import { EventEmitter } from 'events'
 import { MessageEmbed } from 'discord.js'
-import { JServiceTrivia, OpenTDBTrivia } from './TriviaService'
+import { JServiceTrivia } from './TriviaService'
 
-export default class Round extends EventEmitter {
+export default class Round {
   trivia: JServiceTrivia
 
   constructor(trivia: JServiceTrivia) {
-    super()
     this.trivia = trivia
   }
 
