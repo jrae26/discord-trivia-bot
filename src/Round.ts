@@ -1,11 +1,11 @@
 import { EventEmitter } from 'events'
 import { MessageEmbed } from 'discord.js'
-import { OpenTDBTrivia } from './TriviaService'
+import { JServiceTrivia, OpenTDBTrivia } from './TriviaService'
 
 export default class Round extends EventEmitter {
-  trivia: OpenTDBTrivia
+  trivia: JServiceTrivia
 
-  constructor(trivia) {
+  constructor(trivia: JServiceTrivia) {
     super()
     this.trivia = trivia
   }
@@ -19,7 +19,7 @@ export default class Round extends EventEmitter {
   }
 
   getMaskedAnswer() {
-    const { correct_answer: answer } = this.trivia
+    const { answer } = this.trivia
     const { length } = answer
 
     const maskCount = Math.floor(length * 0.8)
@@ -30,18 +30,18 @@ export default class Round extends EventEmitter {
       maskedIndices.add(getRandomIntInclusive(0, length - 1))
     }
 
-    return this.trivia.correct_answer
+    return this.trivia.answer
       .split('')
       .map((c, i) => (maskedIndices.has(i) ? '\\_' : c))
       .join('')
   }
 
   getAnswer() {
-    return this.trivia.correct_answer
+    return this.trivia.answer
   }
 
   tryAnswer(answer) {
-    if (answer === this.trivia.correct_answer) {
+    if (answer === this.trivia.answer) {
       return true
     }
   }

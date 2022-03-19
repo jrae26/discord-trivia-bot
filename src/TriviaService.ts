@@ -27,15 +27,11 @@ export default class TriviaService {
       'https://opentdb.com/api.php?amount=10&category=9&difficulty=medium'
     )
     console.log(response.data.results)
-
-    const prisma = new PrismaClient()
-    await prisma.$connect()
-    const clue = await prisma.clues.aggregateRaw({
-      pipeline: [{ $sample: { size: 1 } }],
-    })
-    console.log('jclue: ', clue)
-
-    return response.data.results[getRandomInt(10)]
+    const question = {
+      ...response.data.results[getRandomInt(10)],
+    }
+    question.answer = question.correct_answer
+    return question
   }
 
   static async getJServiceQuestion(): Promise<JServiceTrivia> {
@@ -43,11 +39,14 @@ export default class TriviaService {
     await prisma.$connect()
     const clue = await prisma.clues.aggregateRaw({
       pipeline: [{ $sample: { size: 1 } }],
-    })[0]
-    return clue
+    })
+    console.log(clue)
+    await prisma.$disconnect()
+    // @ts-ignore
+    return clue[0]
   }
 
-  static async getQuestion() {
-    return this.getOpenTDBQuestion()
+  static async getQuestion(): Promise<JServiceTrivia> {
+    return await TriviaService.getJServiceQuestion()
   }
 }
