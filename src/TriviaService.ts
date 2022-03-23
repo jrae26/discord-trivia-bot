@@ -1,5 +1,6 @@
-import { categories, clues, PrismaClient } from '@prisma/client'
+import { categories, clues } from '@prisma/client'
 import axios from 'axios'
+import { prisma } from './PrismaClient'
 
 function getRandomInt(max) {
   return Math.floor(Math.random() * max)
@@ -31,7 +32,6 @@ export default class TriviaService {
   }
 
   static async getJServiceQuestion(): Promise<JServiceTrivia> {
-    const prisma = new PrismaClient()
     await prisma.$connect()
     const clue = await prisma.clues.aggregateRaw({
       pipeline: [
