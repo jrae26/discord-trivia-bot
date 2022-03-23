@@ -1,7 +1,7 @@
 import Game from './Game'
 
 export default class GameManager {
-  static games = {}
+  static games: { [key: string]: Game } = {}
   static startGame(channel) {
     if (GameManager.games[channel.id]) {
       channel.send('game in progress')

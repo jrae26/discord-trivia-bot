@@ -1,17 +1,18 @@
+import { Message, TextChannel } from 'discord.js'
 import { EventEmitter } from 'events'
 import Round from './Round'
 import TriviaService from './TriviaService'
 
-const ROUND_MILLISECONDS = 15 * 1000
+const ROUND_MILLISECONDS = 30 * 1000
 
 export default class GameRound extends EventEmitter {
   round: Round
   winner: any
-  channel: any
+  channel: TextChannel
   handleMessage
   timer
 
-  constructor(channel) {
+  constructor(channel: TextChannel) {
     super()
     this.channel = channel
     this.handleMessage = this._handleMessage.bind(this)
@@ -27,7 +28,7 @@ export default class GameRound extends EventEmitter {
     this.timer = setTimeout(this.end.bind(this), ROUND_MILLISECONDS)
   }
 
-  _handleMessage({ content, channel, author }) {
+  _handleMessage({ content, channel, author }: Message) {
     if (author.bot) {
       console.log('message is from the bot, skipping')
       return
@@ -36,23 +37,24 @@ export default class GameRound extends EventEmitter {
       console.log('message is outside game, skipping')
       return
     }
+
     const result = this.round.tryAnswer(content)
     if (result) {
       this.winner = author.id
       channel.send({
         content: `<@${author.id}> got the answer right`,
-        allowed_mentions: { users: [author.id] },
+        // allowed_mentions: { users: [author.id] },
       })
       this.end()
     } else {
-      channel.send('wrong')
+      // channel.send('wrong')
     }
   }
 
   end() {
     clearTimeout(this.timer)
     this.channel.client.off('message', this.handleMessage)
-    if(!this.winner){
+    if (!this.winner) {
       this.channel.send(`The correct answer was: ${this.round.getAnswer()}`)
     }
     this.emit('end')
