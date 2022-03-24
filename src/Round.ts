@@ -41,8 +41,8 @@ export default class Round {
     return this.trivia.answer
   }
 
-  tryAnswer(answer) {
-    if (answer === this.trivia.answer) {
+  tryAnswer(answer: string) {
+    if (answer.toLowerCase() === this.trivia.answer.toLowerCase()) {
       return true
     }
   }
