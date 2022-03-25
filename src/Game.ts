@@ -74,6 +74,7 @@ export default class Game extends EventEmitter {
       }, defaultResults)
 
     const formattedResults = Object.keys(results)
+      .sort((playerA, playerB) => results[playerB] - results[playerA])
       .map((player) => `<@${player}> - ${results[player]}`)
       .join('\n\n')
 
