@@ -43,7 +43,7 @@ export default class Game extends EventEmitter {
   }
 
   startRound() {
-    const gRound = new GameRound(this.channel)
+    const gRound = new GameRound(this.channel, this.round +1)
     this.currentRound = gRound
     this.record.push(gRound)
     gRound.start()

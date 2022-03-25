@@ -9,12 +9,14 @@ export default class GameRound extends EventEmitter {
   round: Round
   winner: any
   channel: TextChannel
+  number: number
   handleMessage
   timer
 
-  constructor(channel: TextChannel) {
+  constructor(channel: TextChannel, number: number) {
     super()
     this.channel = channel
+    this.number = number
     this.handleMessage = this._handleMessage.bind(this)
   }
 
@@ -24,6 +26,7 @@ export default class GameRound extends EventEmitter {
     const trivia = await TriviaService.getQuestion()
     this.round = new Round(trivia)
 
+    this.channel.send(`Question #${this.number}`)
     this.channel.send(this.round.formatMessage())
     this.timer = setTimeout(this.end.bind(this), ROUND_MILLISECONDS)
   }
