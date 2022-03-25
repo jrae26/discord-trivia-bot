@@ -1,30 +1,27 @@
 import { Client, Intents } from 'discord.js'
 import dotenv from 'dotenv'
+import { Commands } from './Commands'
 import GameManager from './GameManager'
 
 dotenv.config()
 
-// const { Client, Intents } = require('discord.js')
-
-const client = new Client({
-  // intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES],
-})
+const client = new Client({})
 
 client.on('ready', () => {
   console.log(`Logged in as ${client.user?.tag}!`)
 })
 
+const getCommandString = (command: Commands) => {
+  const prefix = '>'
+  const { VERSION } = process.env
+  const suffix = VERSION === 'beta' ? '-beta' : ''
+  return `${prefix}${command}${suffix}`
+}
+
 client.on('message', (message) => {
-  if (message.content === 'ping') {
-    message.channel.send('pong')
-  }
-  if (message.content === '!beta') {
+  if (message.content === getCommandString(Commands.start)) {
     const gameId = GameManager.startGame(message.channel)
     console.log(gameId)
-  }
-
-  if (message.content === '!end') {
-    GameManager.endGame(message.channel)
   }
 })
 
