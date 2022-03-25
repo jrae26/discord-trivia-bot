@@ -2,7 +2,7 @@ import { Message, MessageEmbed, TextChannel, User } from 'discord.js'
 import { EventEmitter } from 'events'
 import GameRound from './GameRound'
 
-const MAX_ROUNDS = 5
+const MAX_ROUNDS = 10
 
 export default class Game extends EventEmitter {
   channel: any
