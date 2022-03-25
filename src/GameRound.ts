@@ -21,11 +21,11 @@ export default class GameRound extends EventEmitter {
   }
 
   async start() {
-    this.channel.client.on('message', this.handleMessage)
-
+    
     const trivia = await TriviaService.getQuestion()
     this.round = new Round(trivia)
-
+    
+    this.channel.client.on('message', this.handleMessage)
     this.channel.send(`Question #${this.number}`)
     this.channel.send(this.round.formatMessage())
     this.timer = setTimeout(this.end.bind(this), ROUND_MILLISECONDS)

@@ -43,10 +43,9 @@ export default class Game extends EventEmitter {
   }
 
   startRound() {
-    const gRound = new GameRound(this.channel, this.round +1)
+    const gRound = new GameRound(this.channel, this.round + 1)
     this.currentRound = gRound
     this.record.push(gRound)
-    gRound.start()
     gRound.on('end', () => {
       this.round++
       if (this.round === MAX_ROUNDS) {
@@ -55,6 +54,7 @@ export default class Game extends EventEmitter {
         this.startRound()
       }
     })
+    gRound.start()
   }
 
   sendResults() {
