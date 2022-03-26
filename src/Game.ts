@@ -22,7 +22,6 @@ export default class Game extends EventEmitter {
   }
 
   start() {
-    this.channel.send('starting game')
     this.channel.client.on('message', this.handleMessage)
     this.startRound()
   }
@@ -88,7 +87,6 @@ export default class Game extends EventEmitter {
   }
 
   end() {
-    this.channel.send('ending game')
     this.channel.client.off('message', this.handleMessage)
     this.sendResults()
 
