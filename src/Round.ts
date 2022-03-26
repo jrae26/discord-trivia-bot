@@ -15,7 +15,7 @@ export default class Round {
       .setColor('#0099ff')
       .setTitle(this.trivia.category.title)
       .setDescription(this.trivia.question)
-      .addField('Answer', this.getMaskedAnswer())
+      .addField('Answer', `\`${this.getMaskedAnswer()}\``)
       .setFooter(`qid: ${this.trivia.qId}`)
   }
 
@@ -33,7 +33,7 @@ export default class Round {
 
     return this.trivia.answer
       .split('')
-      .map((c, i) => (maskedIndices.has(i) && c != ' ' ? '\\_' : c))
+      .map((c, i) => (maskedIndices.has(i) && c != ' ' ? '_' : c))
       .join('')
   }
 
