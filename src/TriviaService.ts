@@ -35,6 +35,7 @@ export default class TriviaService {
     await prisma.$connect()
     const clue = await prisma.clues.aggregateRaw({
       pipeline: [
+        { $sample: { size: 1 } },
         {
           $lookup: {
             from: 'categories',
@@ -45,7 +46,6 @@ export default class TriviaService {
         },
         { $addFields: { category: { $first: '$category_docs' } } },
         { $project: { category_docs: false } },
-        { $sample: { size: 1 } },
       ],
     })
     await prisma.$disconnect()
