@@ -1,6 +1,8 @@
 import { MessageEmbed } from 'discord.js'
 import { JServiceTrivia } from './TriviaService'
 
+const specialChars = /[^a-zA-Z0-9]/g
+
 export default class Round {
   trivia: JServiceTrivia
 
@@ -33,7 +35,10 @@ export default class Round {
 
     return this.trivia.answer
       .split('')
-      .map((c, i) => (maskedIndices.has(i) && c != ' ' ? '_' : c))
+      .map((c, i) => {
+        if (c.match(specialChars)) return c
+        return maskedIndices.has(i) ? '_' : c
+      })
       .join('')
   }
 
@@ -42,9 +47,11 @@ export default class Round {
   }
 
   tryAnswer(answer: string) {
-    if (answer.toLowerCase() === this.trivia.answer.toLowerCase()) {
-      return true
+    const sanitize = (s: string) => {
+      return s.replace(specialChars, '').toLowerCase()
     }
+
+    return sanitize(answer) === sanitize(this.trivia.answer)
   }
 }
 
