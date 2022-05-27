@@ -1,10 +1,14 @@
 import { Client, Intents } from 'discord.js'
 import dotenv from 'dotenv'
+import { connect } from 'mongoose'
 import { Commands } from './Commands'
 import GameManager from './GameManager'
 
 dotenv.config()
-
+const { DATABASE_URL } = process.env
+connect(DATABASE_URL as string).then(() =>
+  console.log('mongoose connection successful')
+)
 const client = new Client({})
 
 client.on('ready', () => {

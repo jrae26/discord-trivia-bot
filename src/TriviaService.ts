@@ -1,6 +1,6 @@
 import { categories, clues } from '@prisma/client'
 import axios from 'axios'
-import { prisma } from './PrismaClient'
+import { Clue } from './models/Clue'
 
 function getRandomInt(max) {
   return Math.floor(Math.random() * max)
@@ -32,24 +32,21 @@ export default class TriviaService {
   }
 
   static async getJServiceQuestion(): Promise<JServiceTrivia> {
-    await prisma.$connect()
-    const clue = await prisma.clues.aggregateRaw({
-      pipeline: [
-        { $sample: { size: 1 } },
-        {
-          $lookup: {
-            from: 'categories',
-            localField: 'category',
-            foreignField: '_id',
-            as: 'category_docs',
-          },
+    const clue = await Clue.aggregate([
+      // { $match: { answer: { $regex: '[^a-zA-Z0-9 ]' } } },
+      { $sample: { size: 1 } },
+      {
+        $lookup: {
+          from: 'categories',
+          localField: 'category',
+          foreignField: '_id',
+          as: 'category_docs',
         },
-        { $addFields: { category: { $first: '$category_docs' } } },
-        { $project: { category_docs: false } },
-      ],
-    })
-    await prisma.$disconnect()
-    return clue[0] as unknown as JServiceTrivia
+      },
+      { $addFields: { category: { $first: '$category_docs' } } },
+      { $project: { category_docs: false } },
+    ])
+    return clue[0]
   }
 
   static async getQuestion(): Promise<JServiceTrivia> {
