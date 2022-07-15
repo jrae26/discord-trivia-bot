@@ -35,9 +35,7 @@ export default class Game extends EventEmitter {
       console.log('message is outside game, skipping')
       return
     }
-    if (!this.players.has(author.id)) {
-      // channel.send(`thanks for joining us, <@${author.id}>`)
-    }
+
     this.players.add(author.id)
   }
 

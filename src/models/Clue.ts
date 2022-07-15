@@ -1,6 +1,5 @@
 import { Schema, Types, model } from 'mongoose'
 
-// 1. Create an interface representing a document in MongoDB.
 export interface Clue {
   airdate: Date
   answer: string
@@ -11,7 +10,6 @@ export interface Clue {
   category: Types.ObjectId
 }
 
-// 2. Create a Schema corresponding to the document interface.
 var clueSchema = new Schema<Clue>(
   {
     airdate: Date,
@@ -25,5 +23,4 @@ var clueSchema = new Schema<Clue>(
   { timestamps: true }
 )
 
-// 3. Create a Model.
 export const Clue = model<Clue>('Clue', clueSchema)

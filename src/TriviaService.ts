@@ -33,7 +33,6 @@ export default class TriviaService {
 
   static async getJServiceQuestion(): Promise<JServiceTrivia> {
     const clue = await Clue.aggregate([
-      // { $match: { answer: { $regex: '[^a-zA-Z0-9 ]' } } },
       { $sample: { size: 1 } },
       {
         $lookup: {
