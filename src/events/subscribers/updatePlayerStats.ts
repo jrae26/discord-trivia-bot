@@ -9,20 +9,14 @@ export const updatePlayerStats = async (
 
   const promises = Object.keys(results).map(async (playerId) => {
     console.log(playerId)
-    return await PlayerStats.findOneAndUpdate(
-      { playerId, serverId },
-      [
-        {
-          $set: {
-            totalCorrectAnswers: {
-              $add: ['$totalCorrectAnswers', results[playerId]],
-            },
-          },
-          totalGamesPlayed: { $add: ['$totalGamesPlayed', 1] },
-        },
-      ],
-      { upsert: true }
-    )
+
+    let stats = await PlayerStats.findOne({ playerId, serverId }, { upsert: true })
+    if (!stats) stats = new PlayerStats({ playerId, serverId })
+    
+    stats.totalCorrectAnswers += results[playerId]
+    stats.totalGamesPlayed += 1
+    
+    return await stats.save()
   })
 
   await Promise.all(promises)
