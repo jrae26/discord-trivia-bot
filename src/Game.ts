@@ -1,11 +1,11 @@
-import { Message, MessageEmbed, TextChannel, User } from 'discord.js'
+import { Message, EmbedBuilder, TextChannel, User } from 'discord.js'
 import { EventEmitter } from 'events'
 import GameRound from './GameRound'
 
 const MAX_ROUNDS = 10
 
 export default class Game extends EventEmitter {
-  channel: any
+  channel: TextChannel
   round: number = 0
   currentRound: GameRound
   record: GameRound[]
@@ -22,7 +22,7 @@ export default class Game extends EventEmitter {
   }
 
   start() {
-    this.channel.client.on('message', this.handleMessage)
+    this.channel.client.on('messageCreate', this.handleMessage)
     this.startRound()
   }
 
@@ -75,17 +75,16 @@ export default class Game extends EventEmitter {
       .map((player) => `<@${player}> - ${results[player]}`)
       .join('\n\n')
 
-    const embed = new MessageEmbed()
-      .setColor('#0099ff')
+    const embed = new EmbedBuilder().setColor('#0099ff')
       .setTitle('Final Scores')
       .setDescription(formattedResults)
 
     this.channel.send('The results are in!')
-    this.channel.send(embed)
+    this.channel.send({ embeds: [embed] })
   }
 
   end() {
-    this.channel.client.off('message', this.handleMessage)
+    this.channel.client.off('messageCreate', this.handleMessage)
     this.sendResults()
 
     this.emit('end')
