@@ -2,6 +2,7 @@ import { Client, GatewayIntentBits } from 'discord.js'
 import dotenv from 'dotenv'
 import { connect } from 'mongoose'
 import { Commands } from './Commands'
+import { registerSubscribers } from './events/subscribers'
 import GameManager from './GameManager'
 
 dotenv.config()
@@ -18,6 +19,10 @@ const client = new Client({
     GatewayIntentBits.GuildMembers,
   ],
 });
+
+// const client = new Client({
+//   intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES],
+// })
 
 client.on('ready', () => {
   console.log(`Logged in as ${client.user?.tag}!`)
@@ -39,3 +44,5 @@ client.on('messageCreate', (message) => {
 
 const { DISCORD_BOT_TOKEN } = process.env
 client.login(DISCORD_BOT_TOKEN)
+
+registerSubscribers()

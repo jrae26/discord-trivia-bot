@@ -1,8 +1,10 @@
 import { Message, EmbedBuilder, TextChannel, User } from 'discord.js'
 import { EventEmitter } from 'events'
+import PubSub from 'pubsub-js'
+import { Events } from './events/events'
 import GameRound from './GameRound'
 
-const MAX_ROUNDS = 10
+const MAX_ROUNDS = 3
 
 export default class Game extends EventEmitter {
   channel: TextChannel
@@ -69,6 +71,11 @@ export default class Game extends EventEmitter {
           [record.winner]: (acc[record.winner] ?? 0) + 1,
         }
       }, defaultResults)
+
+    PubSub.publish(Events.GAME_END, {
+      results,
+      serverId: this.channel.guild.id,
+    })
 
     const formattedResults = Object.keys(results)
       .sort((playerA, playerB) => results[playerB] - results[playerA])
