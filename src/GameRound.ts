@@ -21,13 +21,13 @@ export default class GameRound extends EventEmitter {
   }
 
   async start() {
-    
+
     const trivia = await TriviaService.getQuestion()
     this.round = new Round(trivia)
-    
-    this.channel.client.on('message', this.handleMessage)
+
+    this.channel.client.on('messageCreate', this.handleMessage)
     this.channel.send(`Question #${this.number}`)
-    this.channel.send(this.round.formatMessage())
+    this.channel.send({ embeds: [this.round.formatMessage()] })
     this.timer = setTimeout(this.end.bind(this), ROUND_MILLISECONDS)
   }
 
@@ -56,7 +56,7 @@ export default class GameRound extends EventEmitter {
 
   end() {
     clearTimeout(this.timer)
-    this.channel.client.off('message', this.handleMessage)
+    this.channel.client.off('messageCreate', this.handleMessage)
     if (!this.winner) {
       this.channel.send(`The correct answer was: ${this.round.getAnswer()}`)
     }

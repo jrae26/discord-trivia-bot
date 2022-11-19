@@ -1,4 +1,4 @@
-import { MessageEmbed } from 'discord.js'
+import { EmbedBuilder } from 'discord.js'
 import { JServiceTrivia } from './TriviaService'
 
 const specialChars = /[^a-zA-Z0-9]/g
@@ -13,12 +13,12 @@ export default class Round {
   formatMessage() {
     // @ts-ignore
     const airDate = new Date(this.trivia.airdate.$date).toLocaleDateString()
-    return new MessageEmbed()
+    return new EmbedBuilder()
       .setColor('#0099ff')
       .setTitle(this.trivia.category.title)
       .setDescription(this.trivia.question)
-      .addField('Answer', `\`${this.getMaskedAnswer()}\``)
-      .setFooter(`qid: ${this.trivia.qId}`)
+      .addFields({ name: 'Answer', value: `\`${this.getMaskedAnswer()}\`` })
+      .setFooter({ text: `qid: ${this.trivia.qId}` })
   }
 
   getMaskedAnswer() {
