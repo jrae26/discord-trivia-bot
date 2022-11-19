@@ -23,6 +23,7 @@ export default class GameRound extends EventEmitter {
   async start() {
 
     const trivia = await TriviaService.getQuestion()
+    console.log(trivia.answer)
     this.round = new Round(trivia)
 
     this.channel.client.on('messageCreate', this.handleMessage)
