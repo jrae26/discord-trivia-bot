@@ -1,0 +1,46 @@
+.container {
+  height: 300px;
+  width: 500px;
+  background-color: lightslategrey;
+  border-radius: 50px;
+  padding: 20px;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.content {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  height: 100%;
+  /* background-color: antiquewhite; */
+}
+
+.divider {
+  width: 90%;
+  /* border-color: rgba(225, 225, 225, 0.5); */
+  border-color: aliceblue;
+}
+
+.right {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding-top: 16px;
+}
+
+.avatar-container {
+  height: 125px;
+  width: 125px;
+  border-radius: 86px;
+  border: 8px solid aliceblue;
+}
+.avatar {
+  height: 100%;
+  width: 100%;
+  border-radius: 50%;
+}
+
+.name {
+  text-align: center;
+  font-size: 22px;
+}
