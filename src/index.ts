@@ -1,7 +1,8 @@
-import { Client, GatewayIntentBits } from 'discord.js'
+import { Client, Events, GatewayIntentBits } from 'discord.js'
 import dotenv from 'dotenv'
 import { connect } from 'mongoose'
 import { Commands } from './Commands'
+import CommandManager from './commands/CommandManager'
 import GameManager from './GameManager'
 
 dotenv.config()
@@ -19,8 +20,13 @@ const client = new Client({
   ],
 });
 
-client.on('ready', () => {
+client.on(Events.ClientReady, () => {
   console.log(`Logged in as ${client.user?.tag}!`)
+})
+
+client.on(Events.InteractionCreate, interaction => {
+  if (!interaction.isChatInputCommand()) return
+  CommandManager.handle(interaction)
 })
 
 const getCommandString = (command: Commands) => {
