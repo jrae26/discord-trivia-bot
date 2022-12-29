@@ -1,5 +1,5 @@
-import { categories, clues } from '@prisma/client'
 import axios from 'axios'
+import { Category } from './models/Category'
 import { Clue } from './models/Clue'
 
 function getRandomInt(max) {
@@ -15,8 +15,8 @@ export interface OpenTDBTrivia {
   incorrect_answers: string[]
 }
 
-export interface JServiceTrivia extends Omit<clues, 'category'> {
-  category: categories
+export interface JServiceTrivia extends Omit<Clue, 'category'> {
+  category: Category
 }
 
 export default class TriviaService {
