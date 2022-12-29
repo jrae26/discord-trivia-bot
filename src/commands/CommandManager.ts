@@ -1,6 +1,7 @@
 import { ChatInputCommandInteraction } from "discord.js"
 
 import * as ping from './ping'
+import * as trivia from './trivia'
 
 class CommandManager {
     private commands: { [commandName: string]: (interaction: ChatInputCommandInteraction) => void } = {}
@@ -20,7 +21,7 @@ class CommandManager {
 const singleton = new CommandManager()
 
 // TODO: restructure this so that commands can self-register
-const DEFAULT_COMMANDS = [ping]
+const DEFAULT_COMMANDS = [ping, trivia]
 
 DEFAULT_COMMANDS.forEach(command => {
     singleton.register(command.COMMAND_NAME, command.responder)

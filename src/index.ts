@@ -29,19 +29,5 @@ client.on(Events.InteractionCreate, interaction => {
   CommandManager.handle(interaction)
 })
 
-const getCommandString = (command: Commands) => {
-  const prefix = '>'
-  const { VERSION } = process.env
-  const suffix = VERSION === 'beta' ? '-beta' : ''
-  return `${prefix}${command}${suffix}`
-}
-
-client.on('messageCreate', (message) => {
-  if (message.content === getCommandString(Commands.start)) {
-    const gameId = GameManager.startGame(message.channel)
-    console.log(gameId)
-  }
-})
-
 const { DISCORD_BOT_TOKEN } = process.env
 client.login(DISCORD_BOT_TOKEN)
