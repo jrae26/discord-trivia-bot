@@ -6,14 +6,14 @@ A Discord bot to play a game of trivia in your server. Games are per channel, 10
 
 |Command|Description|
 |--|--|
-|>trivia|starts a game of trivia in the channel|
+|trivia start|starts a game of trivia in the channel|
 
 ## Project Roadmap
 
  * [x] basic gameplay (1 round, 10 questions, results at the end)
  * [ ] [in-progress] All-time player stats and leaderboard
  * [ ] Support customizing gameplay by question category and total # of rounds
- * [ ] Support [slash commands](https://discordjs.guide/interactions/slash-commands.html#registering-slash-commands)
+ * [x] Support [slash commands](https://discordjs.guide/interactions/slash-commands.html#registering-slash-commands)
 
 ## Trivia DB
 
