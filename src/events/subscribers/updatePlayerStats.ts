@@ -1,22 +1,23 @@
-import { PlayerStats } from '../../models/PlayerStats'
+import { GuildMember } from '../../models/GuildMember';
 
 export const updatePlayerStats = async (
   msg,
-  data: { results: { [key: string]: number }; serverId: string }
+  data: { results: { [key: string]: number }; guildId: string }
 ) => {
-  const { serverId, results } = data
-  console.log(msg, data)
+  const { guildId, results } = data
 
   const promises = Object.keys(results).map(async (playerId) => {
-    console.log(playerId)
 
-    let stats = await PlayerStats.findOne({ playerId, serverId }, { upsert: true })
-    if (!stats) stats = new PlayerStats({ playerId, serverId })
-    
-    stats.totalCorrectAnswers += results[playerId]
-    stats.totalGamesPlayed += 1
-    
-    return await stats.save()
+    let guildMember = await GuildMember.findOne({ guildId, userId: playerId })
+    if (!guildMember) {
+      guildMember = new GuildMember({ guildId, userId: playerId })
+    }
+
+    guildMember.trivia.totalCorrectAnswers += results[playerId]
+    guildMember.trivia.totalGamesPlayed += 1
+
+    return await guildMember.save()
+
   })
 
   await Promise.all(promises)

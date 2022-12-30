@@ -16,6 +16,6 @@ const guildMemberSchema = new Schema<GuildMember>(
   { timestamps: true }
 )
 
-guildMemberSchema.index({ userId: 1, guildId: 1 })
+guildMemberSchema.index({ userId: 1, guildId: 1 }, { unique: true })
 
 export const GuildMember = model<GuildMember>('GuildMember', guildMemberSchema)

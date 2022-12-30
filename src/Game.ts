@@ -4,7 +4,7 @@ import PubSub from 'pubsub-js'
 import { Events } from './events/events'
 import GameRound from './GameRound'
 
-const MAX_ROUNDS = 3
+const MAX_ROUNDS = 10
 
 export default class Game extends EventEmitter {
   channel: TextChannel
@@ -74,7 +74,7 @@ export default class Game extends EventEmitter {
 
     PubSub.publish(Events.GAME_END, {
       results,
-      serverId: this.channel.guild.id,
+      guildId: this.channel.guild.id,
     })
 
     const formattedResults = Object.keys(results)
