@@ -1,10 +1,11 @@
 import { GuildMember } from '../../models/GuildMember';
+import { Events } from '../events';
 
 export const updatePlayerStats = async (
-  msg,
-  data: { results: { [key: string]: number }; guildId: string }
+  msg: Events,
+  data: { results: { [key: string]: number }; winners: string[]; guildId: string }
 ) => {
-  const { guildId, results } = data
+  const { guildId, winners, results } = data
 
   const promises = Object.keys(results).map(async (playerId) => {
 
@@ -15,6 +16,8 @@ export const updatePlayerStats = async (
 
     guildMember.trivia.totalCorrectAnswers += results[playerId]
     guildMember.trivia.totalGamesPlayed += 1
+
+    if (winners.includes(playerId)) guildMember.trivia.totalGamesWon += 1
 
     return await guildMember.save()
 
