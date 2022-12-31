@@ -8,13 +8,18 @@ export const respondWithLeaderboard = async (interaction: ChatInputCommandIntera
     }
 
     const leaderboardResults = await aggregateLeaderboard(interaction.guildId)
+    const emptyBoard = 'No results to show yet. Play some games to get on the board!'
+
     const standings = leaderboardResults.map((triviaGuildMember, i) => {
         const guildMember = interaction.guild?.members.resolve(triviaGuildMember.userId)
 
-        return `${i + 1}. ${guildMember?.nickname ?? 'unknown'}`
+        if (!guildMember) return 'unknown'
+
+        return `${i + 1}. ${guildMember.nickname ?? guildMember.user.username}`
     }).join('\n')
 
-    const embed = new EmbedBuilder().setTitle(`${interaction.guild?.name} Trivia Leaderboard`).setDescription(standings).setColor('#0099ff')
+    const embed = new EmbedBuilder().setTitle(`${interaction.guild?.name} Trivia Leaderboard`).setDescription(standings || emptyBoard).setColor('#0099ff')
+
     interaction.reply({ embeds: [embed] })
 
 }
@@ -29,7 +34,7 @@ const aggregateLeaderboard = async (guildId: string): Promise<GuildMemberRankAgg
         {
             $setWindowFields: {
                 partitionBy: "$guildId",
-                sortBy: { "trivia.totalCorrectAnswers": -1 },
+                sortBy: { "trivia.totalGamesWon": -1 },
                 output: {
                     rank: {
                         $rank: {}
