@@ -12,6 +12,12 @@ export const builder = new SlashCommandBuilder()
         subcommand
             .setName('start')
             .setDescription('start a game of trivia in this channel')
+            .addNumberOption(option => option.setName('rounds')
+                .setDescription('the number of rounds to play for this game (defaults to 10)')
+                .setMaxValue(30)
+                .setMinValue(1)
+                .setRequired(false)
+            )
     )
     .addSubcommand(subcommand =>
         subcommand
@@ -22,7 +28,7 @@ export const builder = new SlashCommandBuilder()
         subcommand
             .setName('stats')
             .setDescription('show all-time player trivia stats')
-            .addUserOption(option => option.setName('target').setDescription('the user whose stats should be shown (leave blank for your own stats)').setRequired(false))
+            .addUserOption(option => option.setName('user').setDescription('the user whose stats should be shown (leave blank for your own stats)').setRequired(false))
     )
 
 export const responder = async (interaction: ChatInputCommandInteraction) => {
@@ -31,7 +37,8 @@ export const responder = async (interaction: ChatInputCommandInteraction) => {
     switch (subcommand) {
         case 'start':
             interaction.reply('getting ready to start!')
-            GameManager.startGame(interaction.channel)
+            const rounds = interaction.options.getNumber('rounds') ?? undefined
+            GameManager.startGame(interaction.channel, { rounds })
             break
         case 'leaderboard':
             respondWithLeaderboard(interaction)
