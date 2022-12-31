@@ -1,8 +1,14 @@
 import { Message, EmbedBuilder, TextChannel, User } from 'discord.js'
 import { EventEmitter } from 'events'
+import PubSub from 'pubsub-js'
+import { Events } from './events/events'
 import GameRound from './GameRound'
 
 const MAX_ROUNDS = 10
+
+export interface GameOptions {
+  rounds?: number
+}
 
 export default class Game extends EventEmitter {
   channel: TextChannel
@@ -11,14 +17,17 @@ export default class Game extends EventEmitter {
   record: GameRound[]
   players: Set<User['id']>
   handleMessage
+  private max_rounds = MAX_ROUNDS
 
-  constructor(channel: TextChannel) {
+  constructor(channel: TextChannel, options: GameOptions = {}) {
     super()
     this.channel = channel
     this.record = []
     this.players = new Set()
 
     this.handleMessage = this._handleMessage.bind(this)
+
+    if (options.rounds) this.max_rounds = options.rounds
   }
 
   start() {
@@ -45,7 +54,7 @@ export default class Game extends EventEmitter {
     this.record.push(gRound)
     gRound.on('end', () => {
       this.round++
-      if (this.round === MAX_ROUNDS) {
+      if (this.round === this.max_rounds) {
         this.end()
       } else {
         this.startRound()
@@ -70,8 +79,23 @@ export default class Game extends EventEmitter {
         }
       }, defaultResults)
 
-    const formattedResults = Object.keys(results)
+    const orderedPlayers = Object.keys(results)
       .sort((playerA, playerB) => results[playerB] - results[playerA])
+
+    const winningScore = results[orderedPlayers[0]]
+    let winners: string[] = []
+
+    if(winningScore > 0){
+      winners = orderedPlayers.filter(player => results[player] === winningScore)
+    }
+
+    PubSub.publish(Events.GAME_END, {
+      results,
+      winners: winners,
+      guildId: this.channel.guild.id,
+    })
+
+    const formattedResults = orderedPlayers
       .map((player) => `<@${player}> - ${results[player]}`)
       .join('\n\n')
 

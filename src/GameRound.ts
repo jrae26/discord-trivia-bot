@@ -5,9 +5,11 @@ import TriviaService from './TriviaService'
 
 const ROUND_MILLISECONDS = 30 * 1000
 
+type UserId = string
+
 export default class GameRound extends EventEmitter {
   round: Round
-  winner: any
+  winner: UserId
   channel: TextChannel
   number: number
   handleMessage

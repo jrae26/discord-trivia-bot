@@ -3,6 +3,7 @@ import dotenv from 'dotenv'
 import { connect } from 'mongoose'
 import { Commands } from './Commands'
 import CommandManager from './commands/CommandManager'
+import { registerSubscribers } from './events/subscribers'
 import GameManager from './GameManager'
 
 dotenv.config()
@@ -31,3 +32,5 @@ client.on(Events.InteractionCreate, interaction => {
 
 const { DISCORD_BOT_TOKEN } = process.env
 client.login(DISCORD_BOT_TOKEN)
+
+registerSubscribers()
