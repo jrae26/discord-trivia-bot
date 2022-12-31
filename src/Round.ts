@@ -48,7 +48,8 @@ export default class Round {
 
   tryAnswer(answer: string) {
     const sanitize = (s: string) => {
-      return s.replace(specialChars, '').toLowerCase()
+      // https://stackoverflow.com/questions/70172259/javascript-regex-to-check-if-a-string-contains-accented-characters
+      return Array.from(s.normalize( 'NFD' )).filter(char => !char.match(/[^a-zA-Z0-9]/g)).join('').toLowerCase()
     }
 
     return sanitize(answer) === sanitize(this.trivia.answer)
