@@ -25,7 +25,7 @@ export default class Round {
     const { answer } = this.trivia
     const { length } = answer
 
-    const maskCount = Math.floor(length * 0.8)
+    const maskCount = Math.max(1, Math.floor(length * 0.8))
 
     const maskedIndices = new Set()
 
