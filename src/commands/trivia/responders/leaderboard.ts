@@ -7,11 +7,17 @@ export const respondWithLeaderboard = async (interaction: ChatInputCommandIntera
         return
     }
 
+    await interaction.deferReply()
+
     const leaderboardResults = await aggregateLeaderboard(interaction.guildId)
     const emptyBoard = 'No results to show yet. Play some games to get on the board!'
 
+    const userIds = leaderboardResults.map(({ userId }) => userId)
+
+    const guildMembers = await interaction.guild?.members.fetch({ user: userIds })
+
     const standings = leaderboardResults.map((triviaGuildMember, i) => {
-        const guildMember = interaction.guild?.members.resolve(triviaGuildMember.userId)
+        const guildMember = guildMembers?.find(({ id }) => id === triviaGuildMember.userId)
 
         if (!guildMember) return 'unknown'
 
@@ -20,7 +26,7 @@ export const respondWithLeaderboard = async (interaction: ChatInputCommandIntera
 
     const embed = new EmbedBuilder().setTitle(`${interaction.guild?.name} Trivia Leaderboard`).setDescription(standings || emptyBoard).setColor('#0099ff')
 
-    interaction.reply({ embeds: [embed] })
+    interaction.editReply({ embeds: [embed] })
 
 }
 
